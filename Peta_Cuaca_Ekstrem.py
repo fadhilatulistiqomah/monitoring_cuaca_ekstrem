@@ -16,17 +16,7 @@ setup_header()
 # ==========================================================
 # 🧭 1️⃣ KONFIGURASI SIDEBAR DENGAN LOGO
 # ==========================================================
-# --- CSS styling untuk sidebar ---
-# st.markdown("""
-#     <style>
-#         [data-testid="stSidebar"] {
-#             background-color: #f7f9fb;
-#             padding-top: 0px;
-#         }
-#     </style>
-# """, unsafe_allow_html=True)
 
-# # --- Konten Sidebar ---
 # st.sidebar.image("Logo_BMKG.png", caption="Dashboard Monitoring Cuaca Ekstrem")
 st.sidebar.markdown("""
     <div class="sidebar-footer" style="font-size: 12px; color: #666; text-align: center; margin-top: 400px;">
@@ -54,16 +44,6 @@ pilih_tanggal = st.date_input(
 
 # --- 2a. Ambil data STASIUN & HEAVY RAIN dari `data_akhir.db` ---
 conn_akhir = sqlite3.connect(db_path_akhir)
-# Query ini mengambil semua data yang diperlukan untuk titik stasiun dan heavy rain
-# query_main = """
-# SELECT station_wmo_id, NAME, LAT, LON, Temperatur, Curah_Hujan, 
-#        Kecepatan_angin, Heavy_Rain, jam, sandi_gts, tanggal
-# FROM data_akhir
-# WHERE tanggal = ? OR (tanggal = date(?, '+1 day') AND jam = '00:00')
-# ORDER BY station_wmo_id, jam
-# """
-# params_main = (pilih_tanggal, pilih_tanggal)
-# Query ini mengambil semua data yang diperlukan untuk titik stasiun dan heavy rain
 query_main = """
 SELECT station_wmo_id, NAME, LAT, LON, Temperatur, Curah_Hujan, 
        Kecepatan_angin, Heavy_Rain, jam, sandi_gts, tanggal
@@ -71,24 +51,13 @@ FROM data_akhir
 WHERE tanggal = ?
 ORDER BY station_wmo_id, jam
 """
-params_main = (pilih_tanggal,)
+
+params_main = (pilih_tanggal.strftime("%Y-%m-%d"),)
 df_main = pd.read_sql_query(query_main, conn_akhir, params=params_main)
+# params_main = (pilih_tanggal,)
+# df_main = pd.read_sql_query(query_main, conn_akhir, params=params_main)
 conn_akhir.close()
 
-
-# # --- 2b. Ambil data GALE dari `data_lengkap2.db` ---
-# conn_lengkap = sqlite3.connect(db_path_lengkap)
-# # Query ini hanya mengambil data yang relevan untuk Gale
-# query_gale = """
-# SELECT station_wmo_id, NAME, LAT, LON, jam, sandi_gts, Kecepatan_angin
-# FROM data_lengkap
-# WHERE tanggal = ? AND Kecepatan_angin >= 30
-# ORDER BY station_wmo_id, jam
-# """
-# df_gale = pd.read_sql_query(query_gale, conn_lengkap, params=(pilih_tanggal.strftime("%Y-%m-%d"),))
-# conn_lengkap.close()
-
-# --- 2b. Ambil data GALE dari `data_lengkap2.db` ---
 
 # Tentukan tanggal sebelumnya dari tanggal yang dipilih
 tanggal_sebelumnya = pilih_tanggal - timedelta(days=1)
@@ -144,16 +113,6 @@ if not df_main.empty:
         rain_text = "-" if pd.isna(row['Curah_Hujan']) else f"{row['Curah_Hujan']} mm/hari"
         # Hanya plot titik biru stasiun SEKALI saja
         if pd.notna(lat) and pd.notna(lon) and station_id not in plotted_stations:
-            # folium.CircleMarker(
-            #     location=[lat, lon], radius=4, color="blue", fill=True, fill_color="blue",
-            #     fill_opacity=0.7, tooltip=row["NAME"],
-            #     popup=(
-            #         f"<div style='font-size:10px;width:200px;'>"
-            #         f"<b>{row['NAME']}</b> ({station_id})<br>"
-            #         f"Lokasi: {lat}, {lon}"
-            #         f"</div>"
-            #     )
-            # ).add_to(m)
 
             folium.CircleMarker(
                 location=[lat, lon],

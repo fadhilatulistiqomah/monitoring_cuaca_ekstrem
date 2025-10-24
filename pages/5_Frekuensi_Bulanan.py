@@ -41,38 +41,6 @@ def get_color_for_value(value):
     if value == 8: return warna_diskret[7]
     return warna_diskret[8]
 
-# # Fungsi Pembuat Legenda
-# def create_legend_html(title_text, colors, labels_list):
-#     block_width = 45
-#     tip_width = 10
-#     warna_balok = colors[1:-1]
-#     lebar_balok_total = len(warna_balok) * block_width
-#     lebar_legenda_total = lebar_balok_total + (2 * tip_width)
-
-#     return f'''
-#     <div style="
-#         position: fixed; bottom: 20px; left: 18%; transform: translateX(-50%);
-#         background-color: rgba(255, 255, 255, 0.9); border: 1px solid #bbb;
-#         border-radius: 8px; padding: 10px 15px; z-index: 9999;
-#         font-family: Arial, sans-serif; font-size: 12px; text-align: center;
-#         box-shadow: 0 0 10px rgba(0,0,0,0.2);
-#     ">
-#         <span style="font-weight: bold; display: block; margin-bottom: 8px;">{title_text}</span>
-#         <div style="display: flex; flex-direction: column; align-items: center;">
-#             <div style="display: flex; align-items: center; margin-bottom: 2px;">
-#                 <div style="width: 0; height: 0; border-top: 10px solid transparent;
-#                             border-bottom: 10px solid transparent; border-right: {tip_width}px solid {colors[0]};"></div>
-#                 {''.join([f'<div style="background-color: {color}; width: {block_width}px; height: 20px;"></div>' for color in warna_balok])}
-#                 <div style="width: 0; height: 0; border-top: 10px solid transparent;
-#                             border-bottom: 10px solid transparent; border-left: {tip_width}px solid {colors[-1]};"></div>
-#             </div>
-#             <div style="display: flex; justify-content: space-between; width: {lebar_legenda_total}px;">
-#                 {''.join([f'<span>{label}</span>' for label in labels_list])}
-#             </div>
-#         </div>
-#     </div>
-#     '''
-
 def create_legend_html(title_text, colors, labels_list):
     block_width = 45
     tip_width = 15
